@@ -1,0 +1,572 @@
+{
+  "source": "sample.md",
+  "format": "md",
+  "segments": [
+    {
+      "type": "segment",
+      "id": "s0",
+      "block": 0,
+      "kind": "heading",
+      "level": 1,
+      "section": [
+        "Getting Started with the CLI"
+      ],
+      "range": {
+        "start": 40,
+        "end": 68
+      },
+      "text": "Getting Started with the CLI",
+      "plain": "Getting Started with the CLI",
+      "tts": "Getting Started with the C L I.",
+      "token_count": 5
+    },
+    {
+      "type": "segment",
+      "id": "s1",
+      "block": 1,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI"
+      ],
+      "range": {
+        "start": 79,
+        "end": 123
+      },
+      "text": "This tool turns prose into *clean* segments.",
+      "plain": "This tool turns prose into clean segments.",
+      "tts": "This tool turns prose into clean segments.",
+      "token_count": 8
+    },
+    {
+      "type": "segment",
+      "id": "s2",
+      "block": 1,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI"
+      ],
+      "range": {
+        "start": 124,
+        "end": 211
+      },
+      "text": "It handles **bold**, `inline code`, and [links](https://example.com/docs) without fuss.",
+      "plain": "It handles bold, inline code, and links without fuss.",
+      "tts": "It handles bold, inline code, and links without fuss.",
+      "token_count": 12
+    },
+    {
+      "type": "segment",
+      "id": "s3",
+      "block": 1,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI"
+      ],
+      "range": {
+        "start": 212,
+        "end": 258
+      },
+      "text": "See e.g. the docs, Dr. Smith said... it works!",
+      "plain": "See e.g. the docs, Dr. Smith said... it works!",
+      "tts": "See for example the docs, Doctor Smith said, it works!",
+      "token_count": 18
+    },
+    {
+      "type": "segment",
+      "id": "s4",
+      "block": 2,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI"
+      ],
+      "range": {
+        "start": 269,
+        "end": 305
+      },
+      "text": "Fenced divs from pandoc are ignored.",
+      "plain": "Fenced divs from pandoc are ignored.",
+      "tts": "Fenced divs from pandoc are ignored.",
+      "token_count": 7
+    },
+    {
+      "type": "segment",
+      "id": "s5",
+      "block": 3,
+      "kind": "heading",
+      "level": 2,
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 314,
+        "end": 321
+      },
+      "text": "Install",
+      "plain": "Install",
+      "tts": "Install.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s6",
+      "block": 4,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 323,
+        "end": 352
+      },
+      "text": "Run `go install` to build it.",
+      "plain": "Run go install to build it.",
+      "tts": "Run go install to build it.",
+      "token_count": 7
+    },
+    {
+      "type": "segment",
+      "id": "s7",
+      "block": 4,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 353,
+        "end": 417
+      },
+      "text": "The tool costs $5 and was released in 1989, with 50% fewer bugs.",
+      "plain": "The tool costs $5 and was released in 1989, with 50% fewer bugs.",
+      "tts": "The tool costs five dollars and was released in nineteen eighty-nine, with fifty percent fewer bugs.",
+      "token_count": 17
+    },
+    {
+      "type": "segment",
+      "id": "s8",
+      "block": 4,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 418,
+        "end": 471
+      },
+      "text": "A hard-wrapped line continues here\nand finishes here.",
+      "plain": "A hard-wrapped line continues here and finishes here.",
+      "tts": "A hard-wrapped line continues here and finishes here.",
+      "token_count": 11
+    },
+    {
+      "type": "segment",
+      "id": "s9",
+      "block": 4,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 472,
+        "end": 514
+      },
+      "text": "Escaped \\*stars\\* and an \u0026amp; entity too.",
+      "plain": "Escaped *stars* and an \u0026 entity too.",
+      "tts": "Escaped stars and an and entity too.",
+      "token_count": 10
+    },
+    {
+      "type": "segment",
+      "id": "s10",
+      "block": 5,
+      "kind": "list_item",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 518,
+        "end": 549
+      },
+      "text": "First item with a @s0cks handle",
+      "plain": "First item with a @s0cks handle",
+      "tts": "First item with a at s zero cks handle.",
+      "token_count": 7
+    },
+    {
+      "type": "segment",
+      "id": "s11",
+      "block": 6,
+      "kind": "list_item",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 552,
+        "end": 579
+      },
+      "text": "Second item — with a dash",
+      "plain": "Second item — with a dash",
+      "tts": "Second item, with a dash.",
+      "token_count": 6
+    },
+    {
+      "type": "segment",
+      "id": "s12",
+      "block": 7,
+      "kind": "list_item",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 584,
+        "end": 596
+      },
+      "text": "Numbered one",
+      "plain": "Numbered one",
+      "tts": "Numbered one.",
+      "token_count": 2
+    },
+    {
+      "type": "segment",
+      "id": "s13",
+      "block": 8,
+      "kind": "list_item",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 600,
+        "end": 612
+      },
+      "text": "Numbered two",
+      "plain": "Numbered two",
+      "tts": "Numbered two.",
+      "token_count": 2
+    },
+    {
+      "type": "segment",
+      "id": "s14",
+      "block": 9,
+      "kind": "blockquote",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 616,
+        "end": 634
+      },
+      "text": "A quoted sentence.",
+      "plain": "A quoted sentence.",
+      "tts": "A quoted sentence.",
+      "token_count": 4
+    },
+    {
+      "type": "segment",
+      "id": "s15",
+      "block": 9,
+      "kind": "blockquote",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 635,
+        "end": 654
+      },
+      "text": "Another quoted one.",
+      "plain": "Another quoted one.",
+      "tts": "Another quoted one.",
+      "token_count": 4
+    },
+    {
+      "type": "segment",
+      "id": "s16",
+      "block": 10,
+      "kind": "code_block",
+      "lang": "go",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 662,
+        "end": 682
+      },
+      "text": "fmt.Println(\"hello\")",
+      "plain": "fmt.Println(\"hello\")",
+      "tts": ""
+    },
+    {
+      "type": "segment",
+      "id": "s17",
+      "block": 11,
+      "kind": "heading",
+      "level": 3,
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 692,
+        "end": 698
+      },
+      "text": "Tables",
+      "plain": "Tables",
+      "tts": "Tables.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s18",
+      "block": 12,
+      "kind": "table_cell",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 702,
+        "end": 706
+      },
+      "text": "Name",
+      "plain": "Name",
+      "tts": "Name.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s19",
+      "block": 13,
+      "kind": "table_cell",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 709,
+        "end": 714
+      },
+      "text": "Value",
+      "plain": "Value",
+      "tts": "Value.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s20",
+      "block": 14,
+      "kind": "table_cell",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 736,
+        "end": 739
+      },
+      "text": "foo",
+      "plain": "foo",
+      "tts": "foo.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s21",
+      "block": 15,
+      "kind": "table_cell",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 743,
+        "end": 745
+      },
+      "text": "42",
+      "plain": "42",
+      "tts": "forty-two.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s22",
+      "block": 16,
+      "kind": "term",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 752,
+        "end": 756
+      },
+      "text": "Term",
+      "plain": "Term",
+      "tts": "Term.",
+      "token_count": 1
+    },
+    {
+      "type": "segment",
+      "id": "s23",
+      "block": 17,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 761,
+        "end": 787
+      },
+      "text": "A definition for the term.",
+      "plain": "A definition for the term.",
+      "tts": "A definition for the term.",
+      "token_count": 6
+    },
+    {
+      "type": "segment",
+      "id": "s24",
+      "block": 18,
+      "kind": "paragraph",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 789,
+        "end": 811
+      },
+      "text": "Footnote ref[^1] here.",
+      "plain": "Footnote ref here.",
+      "tts": "Footnote ref here.",
+      "token_count": 4
+    },
+    {
+      "type": "segment",
+      "id": "s25",
+      "block": 19,
+      "kind": "footnote",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 819,
+        "end": 837
+      },
+      "text": "The footnote text.",
+      "plain": "The footnote text.",
+      "tts": "The footnote text.",
+      "token_count": 4
+    }
+  ],
+  "chunks": [
+    {
+      "type": "chunk",
+      "id": "c0",
+      "section": [
+        "Getting Started with the CLI"
+      ],
+      "range": {
+        "start": 40,
+        "end": 305
+      },
+      "segments": [
+        "s0",
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "token_count": 50,
+      "text": "Getting Started with the C L I.\n\nThis tool turns prose into clean segments. It handles bold, inline code, and links without fuss. See for example the docs, Doctor Smith said, it works!\n\nFenced divs from pandoc are ignored."
+    },
+    {
+      "type": "chunk",
+      "id": "c1",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 314,
+        "end": 579
+      },
+      "segments": [
+        "s5",
+        "s6",
+        "s7",
+        "s8",
+        "s9",
+        "s10",
+        "s11"
+      ],
+      "token_count": 59,
+      "text": "Install.\n\nRun go install to build it. The tool costs five dollars and was released in nineteen eighty-nine, with fifty percent fewer bugs. A hard-wrapped line continues here and finishes here. Escaped stars and an and entity too.\n\nFirst item with a at s zero cks handle.\n\nSecond item, with a dash."
+    },
+    {
+      "type": "chunk",
+      "id": "c2",
+      "section": [
+        "Getting Started with the CLI",
+        "Install"
+      ],
+      "range": {
+        "start": 584,
+        "end": 654
+      },
+      "segments": [
+        "s12",
+        "s13",
+        "s14",
+        "s15"
+      ],
+      "token_count": 12,
+      "text": "Numbered one.\n\nNumbered two.\n\nA quoted sentence. Another quoted one."
+    },
+    {
+      "type": "chunk",
+      "id": "c3",
+      "section": [
+        "Getting Started with the CLI",
+        "Install",
+        "Tables"
+      ],
+      "range": {
+        "start": 692,
+        "end": 837
+      },
+      "segments": [
+        "s17",
+        "s18",
+        "s19",
+        "s20",
+        "s21",
+        "s22",
+        "s23",
+        "s24",
+        "s25"
+      ],
+      "token_count": 20,
+      "text": "Tables.\n\nName.\n\nValue.\n\nfoo.\n\nforty-two.\n\nTerm.\n\nA definition for the term.\n\nFootnote ref here.\n\nThe footnote text."
+    }
+  ]
+}

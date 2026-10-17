@@ -1,0 +1,15 @@
+# Example user lexicon. Pass it with:  texttool --tts --lexicon examples/lexicon.yaml doc.md
+# Entries merge over the builtin lexicon; later --lexicon files win.
+
+acronyms:
+  CLI: { expand: command line tool }   # replaces the builtin expansion
+  TUI: { expand: terminal user interface }
+  LAWM: { say: "lawm" }                # a pronounceable project name
+
+words:
+  s0cks: socks
+  wlroots: way L roots
+  libuv: lib U V
+
+handles:
+  "@s0cks": at socks                   # exact replacement, bypasses --handles

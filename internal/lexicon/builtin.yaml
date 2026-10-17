@@ -1,0 +1,139 @@
+# Builtin lexicon. User files passed with --lexicon are merged on top of this
+# one; later files win.
+#
+# acronyms: keys are matched case-sensitively as whole words (a trailing
+#   lowercase "s" is treated as a plural). Per entry:
+#     say:    always spoken this way, whatever --acronyms says (pronounced words)
+#     spell:  letter-by-letter reading; defaults to the key's letters spaced out
+#     expand: full expansion, used when --acronyms=expand
+#   A bare string is shorthand for say.
+# words: pronunciation overrides, matched case-insensitively.
+# handles: exact replacements for @handles, matched case-insensitively.
+
+acronyms:
+  API:   { expand: application programming interface }
+  APIs:  { say: "A P I's", expand: application programming interfaces }
+  AI:    { expand: artificial intelligence }
+  ASAP:  { say: "as soon as possible" }
+  ASR:   { expand: automatic speech recognition }
+  AST:   { expand: abstract syntax tree }
+  AWS:   { expand: Amazon Web Services }
+  CD:    { expand: continuous delivery }
+  CI:    { expand: continuous integration }
+  CLI:   { expand: command line interface }
+  CPU:   { expand: central processing unit }
+  CRUD:  { say: crud }
+  CSS:   { expand: cascading style sheets }
+  CSV:   { expand: comma separated values }
+  DB:    { expand: database }
+  DNS:   { expand: domain name system }
+  DOM:   { say: dom }
+  DRY:   { say: dry }
+  ETA:   { say: "E T A", expand: estimated time of arrival }
+  FAQ:   { say: "F A Q", expand: frequently asked questions }
+  GC:    { expand: garbage collector }
+  GCP:   { expand: Google Cloud Platform }
+  GIF:   { say: gif }
+  GPS:   { expand: global positioning system }
+  GPT:   { expand: "G P T" }
+  GPU:   { expand: graphics processing unit }
+  GUI:   { expand: graphical user interface }
+  GUID:  { say: guid }
+  HDD:   { expand: hard disk drive }
+  HTML:  { expand: hypertext markup language }
+  HTTP:  { expand: hypertext transfer protocol }
+  HTTPS: { expand: hypertext transfer protocol secure }
+  ID:    { say: "I D", expand: identifier }
+  IDE:   { expand: integrated development environment }
+  IP:    { expand: internet protocol }
+  JIT:   { say: jit }
+  JS:    { say: "J S", expand: JavaScript }
+  JSON:  { say: jason }
+  JWT:   { say: "J W T" }
+  LLM:   { expand: large language model }
+  LSP:   { expand: language server protocol }
+  ML:    { expand: machine learning }
+  MVP:   { expand: minimum viable product }
+  MVU:   { expand: model view update }
+  NER:   { expand: named entity recognition }
+  NLP:   { expand: natural language processing }
+  OK:    { say: okay }
+  ORM:   { expand: object relational mapper }
+  OS:    { expand: operating system }
+  PDF:   { expand: portable document format }
+  PNG:   { expand: "portable network graphics" }
+  POS:   { expand: part of speech }
+  QA:    { say: "Q A", expand: quality assurance }
+  RAM:   { say: ram }
+  REST:  { say: rest }
+  ROM:   { say: rom }
+  SaaS:  { say: sass }
+  SDK:   { expand: software development kit }
+  SQL:   { expand: structured query language }
+  SSD:   { expand: solid state drive }
+  SSH:   { expand: secure shell }
+  SSL:   { expand: secure sockets layer }
+  SVG:   { expand: scalable vector graphics }
+  TCP:   { expand: transmission control protocol }
+  TLS:   { expand: transport layer security }
+  TOML:  { say: tomuhl }
+  TTS:   { expand: text to speech }
+  UDP:   { expand: user datagram protocol }
+  UI:    { expand: user interface }
+  URI:   { expand: uniform resource identifier }
+  URL:   { expand: uniform resource locator }
+  USB:   { expand: universal serial bus }
+  UUID:  { say: "U U I D" }
+  UX:    { expand: user experience }
+  VPN:   { expand: virtual private network }
+  XML:   { expand: extensible markup language }
+  YAML:  { say: yammel }
+  "CI/CD":  { say: "C I C D", expand: continuous integration and continuous delivery }
+  "I/O":    { say: "I O", expand: input and output }
+  "TCP/IP": { say: "T C P I P" }
+  "e.g.":   { say: "for example" }
+  "i.e.":   { say: "that is" }
+  "etc.":   { say: "et cetera" }
+  "vs.":    { say: versus }
+  "vs":     { say: versus }
+  "approx.": { say: approximately }
+  "and/or": { say: "and or" }
+  "w/":     { say: with }
+  "w/o":    { say: without }
+  "Dr.":    { say: Doctor }
+  "Mr.":    { say: Mister }
+  "Mrs.":   { say: Missus }
+  "Ms.":    { say: Miz }
+
+words:
+  "c++": C plus plus
+  "c#": C sharp
+  "f#": F sharp
+  ".net": dot net
+  "node.js": node J S
+  "vue.js": view J S
+  "next.js": next J S
+  "x86": x eighty six
+  "x64": x sixty four
+  "utf-8": U T F eight
+  "mp3": M P three
+  "mp4": M P four
+  "s3": S three
+  "ec2": E C two
+  "kubectl": cube control
+  "nginx": engine x
+  "sqlite": S Q Lite
+  "postgresql": postgres Q L
+  "mysql": my S Q L
+  "mongodb": mongo D B
+  "graphql": graph Q L
+  "grpc": g R P C
+  "stdin": standard in
+  "stdout": standard out
+  "stderr": standard error
+  "chmod": ch mod
+  "localhost": local host
+  "macos": mac O S
+  "ios": i O S
+
+handles: {}
