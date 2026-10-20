@@ -5,6 +5,7 @@ package lexicon
 import (
 	_ "embed"
 	"fmt"
+	"maps"
 	"os"
 	"sort"
 	"strings"
@@ -94,9 +95,7 @@ func Load(path string) (*Lexicon, error) {
 
 // Merge copies o's entries over l's, so o wins on conflict.
 func (l *Lexicon) Merge(o *Lexicon) {
-	for k, v := range o.Acronyms {
-		l.Acronyms[k] = v
-	}
+	maps.Copy(l.Acronyms, o.Acronyms)
 	for k, v := range o.Words {
 		l.Words[strings.ToLower(k)] = v
 	}

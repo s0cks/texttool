@@ -1,0 +1,12 @@
+{
+  "separate-pull-requests": true,
+  "include-component-in-tag": true,
+  "packages": {
+    ".": {
+      "release-type": "go",
+      "initial-version": "0.0.0",
+      "bump-minor-pre-major": true,
+      "bump-patch-pre-major": true
+    }
+  }
+}
