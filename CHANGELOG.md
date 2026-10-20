@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/s0cks/texttool/compare/v0.0.0...v0.1.0) (2026-10-20)
+
+
+### Features
+
+* ✨ load Lexicons from FlatBuffers and make default Lexicon fbs ([efbdb08](https://github.com/s0cks/texttool/commit/efbdb08bb816b0e18b58d44710493cba635b03ba))
+
 ## 0.0.0 (2026-10-20)
 
 
