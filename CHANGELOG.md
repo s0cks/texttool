@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/s0cks/texttool/compare/v0.2.0...v0.3.0) (2026-10-20)
+
+
+### Features
+
+* ✨ add LICENSE ([5eda2e1](https://github.com/s0cks/texttool/commit/5eda2e1c99449d0df5f358c1ac42e7072477e98d))
+
 ## [0.2.0](https://github.com/s0cks/texttool/compare/v0.1.0...v0.2.0) (2026-10-20)
 
 
