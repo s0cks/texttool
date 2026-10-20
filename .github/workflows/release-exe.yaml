@@ -46,9 +46,9 @@ jobs:
         shell: bash
         run: |
           RAW_TAG="${{ github.event.release.tag_name || 'latest' }}"
-          CLEAN_TAG="${RAW_TAG#lsp-v}"
+          CLEAN_TAG="${RAW_TAG#texttool-v}"
           echo "tag=$CLEAN_TAG" >> $GITHUB_OUTPUT
-      - name: Build LSP
+      - name: Build
         shell: bash
         run: |
           export CGO_ENABLED=0
