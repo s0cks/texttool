@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/s0cks/texttool/compare/v0.1.0...v0.2.0) (2026-10-20)
+
+
+### Features
+
+* ✨ hopefully get release-please working ([51e7c5b](https://github.com/s0cks/texttool/commit/51e7c5ba0fd6f6a16927c9f292c11464262aa582))
+
 ## [0.1.0](https://github.com/s0cks/texttool/compare/v0.0.0...v0.1.0) (2026-10-20)
 
 
