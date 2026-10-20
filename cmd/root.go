@@ -19,6 +19,30 @@ import (
 	"github.com/s0cks/texttool/internal/tts"
 )
 
+type runOpts struct {
+	Format string
+	Output string
+	Pretty bool
+	Pos    bool
+	Ner    bool
+	Stem   bool
+	Tts    bool
+	Counts bool
+	ChunkN int
+
+	Dump      bool
+	LexFiles  []string
+	NoBuiltin bool
+
+	Acronyms string
+	Handles  string
+	Inline   string
+	Blocks   string
+	Urls     string
+	Math     string
+	Skip     []string
+}
+
 var RootCommand = &cobra.Command{
 	Use:   "texttool",
 	Short: "segment prose into JSON and prepare it for LLMs, classifiers and TTS",
@@ -34,134 +58,136 @@ its heading breadcrumb ("section") and its kind. Other steps are enabled by flag
 		return viper.BindPFlags(cmd.Flags())
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fs := cmd.Flags()
-		var (
-			format = viper.GetString("format")
-			output = viper.GetString("output")
-			pretty = viper.GetBool("pretty")
-			pos    = viper.GetBool("pos")
-			ner    = viper.GetBool("ner")
-			stem   = viper.GetBool("stem")
-			ttsOn  = viper.GetBool("tts")
-			counts = viper.GetBool("counts")
-			chunkN = viper.GetInt("chunk")
+		opts := runOpts{
+			Format: viper.GetString("format"),
+			Output: viper.GetString("output"),
+			Pretty: viper.GetBool("pretty"),
+			Pos:    viper.GetBool("pos"),
+			Ner:    viper.GetBool("ner"),
+			Stem:   viper.GetBool("stem"),
+			Tts:    viper.GetBool("tts"),
+			Counts: viper.GetBool("counts"),
+			ChunkN: viper.GetInt("chunk"),
 
-			dump      = viper.GetBool("dump-lexicon")
-			lexFiles  = viper.GetStringSlice("lexicon")
-			noBuiltin = viper.GetBool("no-builtin-lexicon")
+			Dump:      viper.GetBool("dump-lexicon"),
+			LexFiles:  viper.GetStringSlice("lexicon"),
+			NoBuiltin: viper.GetBool("no-builtin-lexicon"),
 
-			acronyms = viper.GetString("acronyms")
-			handles  = viper.GetString("handles")
-			inline   = viper.GetString("inline-code")
-			blocks   = viper.GetString("code-blocks")
-			urls     = viper.GetString("urls")
-			math     = viper.GetString("math")
-			skip     = viper.GetStringSlice("skip")
-		)
+			Acronyms: viper.GetString("acronyms"),
+			Handles:  viper.GetString("handles"),
+			Inline:   viper.GetString("inline-code"),
+			Blocks:   viper.GetString("code-blocks"),
+			Urls:     viper.GetString("urls"),
+			Math:     viper.GetString("math"),
+			Skip:     viper.GetStringSlice("skip"),
+		}
 
 		for _, c := range []struct {
 			n, v string
 			ok   []string
 		}{
-			{"format", format, []string{"md", "txt", "auto"}},
-			{"output", output, []string{"json", "ndjson"}},
-			{"acronyms", acronyms, []string{"spell", "expand", "keep"}},
-			{"handles", handles, []string{"say", "strip", "keep"}},
-			{"inline-code", inline, []string{"speak", "strip", "placeholder"}},
-			{"code-blocks", blocks, []string{"strip", "placeholder"}},
-			{"urls", urls, []string{"drop", "domain", "spell"}},
-			{"math", math, []string{"drop", "placeholder"}},
+			{"format", opts.Format, []string{"md", "txt", "auto"}},
+			{"output", opts.Output, []string{"json", "ndjson"}},
+			{"acronyms", opts.Acronyms, []string{"spell", "expand", "keep"}},
+			{"handles", opts.Handles, []string{"say", "strip", "keep"}},
+			{"inline-code", opts.Inline, []string{"speak", "strip", "placeholder"}},
+			{"code-blocks", opts.Blocks, []string{"strip", "placeholder"}},
+			{"urls", opts.Urls, []string{"drop", "domain", "spell"}},
+			{"math", opts.Math, []string{"drop", "placeholder"}},
 		} {
 			if err := oneOf(c.n, c.v, c.ok...); err != nil {
 				return err
 			}
 		}
 
-		if chunkN < 0 {
-			return fmt.Errorf("--chunk must be positive")
-		}
+		return run(&opts, args)
+	},
+}
 
-		lex := lexicon.Empty()
-		if !noBuiltin {
-			lex = lexicon.Builtin()
-		}
+func run(opts *runOpts, args []string) error {
+	if opts.ChunkN < 0 {
+		return fmt.Errorf("--chunk must be positive")
+	}
 
-		for _, f := range lexFiles {
-			u, err := lexicon.Load(f)
-			if err != nil {
-				return err
-			}
+	lex := lexicon.Empty()
+	if !opts.NoBuiltin {
+		lex = lexicon.Builtin()
+	}
 
-			lex.Merge(u)
-		}
-
-		if dump {
-			b, err := lex.Dump()
-			if err != nil {
-				return err
-			}
-
-			_, err = os.Stdout.Write(b)
-			return err
-		}
-
-		skipSet := map[string]bool{}
-		for _, k := range skip {
-			skipSet[strings.TrimSpace(k)] = true
-		}
-
-		proc, err := pipeline.New(pipeline.Options{
-			Format: format,
-			POS:    pos, NER: ner, Stem: stem,
-			TTS:    ttsOn,
-			Counts: counts,
-			Chunk:  chunkN,
-			Skip:   skipSet,
-			TTSOptions: tts.Options{
-				Lexicon:    lex,
-				Acronyms:   acronyms,
-				Handles:    handles,
-				InlineCode: inline,
-				CodeBlocks: blocks,
-				URLs:       urls,
-				Math:       math,
-			},
-		})
+	for _, f := range opts.LexFiles {
+		u, err := lexicon.Load(f)
 		if err != nil {
 			return err
 		}
 
-		inputs := fs.Args()
-		if len(inputs) == 0 {
-			inputs = []string{"-"}
+		lex.Merge(u)
+	}
+
+	if opts.Dump {
+		b, err := lex.Dump()
+		if err != nil {
+			return err
 		}
 
-		var docs []*doc.Document
-		for _, in := range inputs {
-			var src []byte
-			var name string
-			var rerr error
-			if in == "-" {
-				src, rerr = io.ReadAll(os.Stdin)
-			} else {
-				name = in
-				src, rerr = os.ReadFile(in)
-			}
+		_, err = os.Stdout.Write(b)
+		return err
+	}
 
-			if rerr != nil {
-				return rerr
-			}
+	skipSet := map[string]bool{}
+	for _, k := range opts.Skip {
+		skipSet[strings.TrimSpace(k)] = true
+	}
 
-			d, err := proc.Process(src, name)
-			if err != nil {
-				return fmt.Errorf("%s: %w", in, err)
-			}
+	proc, err := pipeline.New(pipeline.Options{
+		Format: opts.Format,
+		POS:    opts.Pos, NER: opts.Ner, Stem: opts.Stem,
+		TTS:    opts.Tts,
+		Counts: opts.Counts,
+		Chunk:  opts.ChunkN,
+		Skip:   skipSet,
+		TTSOptions: tts.Options{
+			Lexicon:    lex,
+			Acronyms:   opts.Acronyms,
+			Handles:    opts.Handles,
+			InlineCode: opts.Inline,
+			CodeBlocks: opts.Blocks,
+			URLs:       opts.Urls,
+			Math:       opts.Math,
+		},
+	})
+	if err != nil {
+		return err
+	}
 
-			docs = append(docs, d)
+	if len(args) == 0 {
+		args = []string{"-"}
+	}
+
+	var docs []*doc.Document
+	for _, in := range args {
+		var src []byte
+		var name string
+		var rerr error
+		if in == "-" {
+			src, rerr = io.ReadAll(os.Stdin)
+		} else {
+			name = in
+			src, rerr = os.ReadFile(in)
 		}
 
-		return emit.Write(os.Stdout, docs, output == "ndjson", pretty)
-	},
+		if rerr != nil {
+			return rerr
+		}
+
+		d, err := proc.Process(src, name)
+		if err != nil {
+			return fmt.Errorf("%s: %w", in, err)
+		}
+
+		docs = append(docs, d)
+	}
+
+	return emit.Write(os.Stdout, docs, opts.Output == "ndjson", opts.Pretty)
 }
 
 func Execute(ctx context.Context) error {
