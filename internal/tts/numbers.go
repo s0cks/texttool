@@ -38,10 +38,6 @@ func group(s string, m []int, i int) string {
 	return s[m[2*i]:m[2*i+1]]
 }
 
-func isWordByte(b byte) bool {
-	return b == '_' || (b >= '0' && b <= '9') || (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z') || b >= 0x80
-}
-
 type unit struct{ one, many string }
 
 var units = map[string]unit{

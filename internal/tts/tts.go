@@ -42,11 +42,6 @@ func (o *Options) defaults() {
 	set(&o.Math, "drop")
 }
 
-type literal struct {
-	key  string
-	fold bool
-}
-
 // Cleaner applies the TTS rewrite. It is safe for concurrent use.
 type Cleaner struct {
 	opt Options
@@ -245,34 +240,43 @@ func urlWords(u, policy string) string {
 	if policy == "drop" {
 		return ""
 	}
+
 	trail := reTrailing.FindString(u)
 	u = strings.TrimSuffix(u, trail)
 	u = reScheme.ReplaceAllString(u, "")
 	if i := strings.IndexAny(u, "?#"); i >= 0 {
 		u = u[:i]
 	}
+
 	host, path := u, ""
 	if i := strings.IndexByte(u, '/'); i >= 0 {
 		host, path = u[:i], u[i:]
 	}
+
 	if i := strings.LastIndexByte(host, '@'); i >= 0 {
 		host = host[i+1:]
 	}
+
 	if i := strings.IndexByte(host, ':'); i >= 0 {
 		host = host[:i]
 	}
+
 	host = strings.TrimPrefix(strings.ToLower(host), "www.")
-	out := strings.ReplaceAll(host, ".", " dot ")
+	var out strings.Builder
+	out.WriteString(strings.ReplaceAll(host, ".", " dot "))
 	if policy == "spell" {
 		for _, seg := range strings.Split(path, "/") {
 			if seg == "" {
 				continue
 			}
+
 			seg = strings.NewReplacer("-", " ", "_", " ").Replace(strings.ReplaceAll(seg, ".", " dot "))
-			out += " slash " + seg
+			out.WriteString(" slash ")
+			out.WriteString(seg)
 		}
 	}
-	return out + trail
+
+	return out.String() + trail
 }
 
 func (c *Cleaner) urls(s string) string {
@@ -298,9 +302,11 @@ func nameWords(name string) string {
 		if prev != 0 && prev != ' ' && r != ' ' && unicode.IsDigit(r) != unicode.IsDigit(prev) {
 			b.WriteByte(' ')
 		}
+
 		b.WriteRune(r)
 		prev = r
 	}
+
 	return b.String()
 }
 
@@ -308,14 +314,17 @@ func (c *Cleaner) handle(s string) string {
 	if c.opt.Handles == "keep" {
 		return s
 	}
+
 	return replaceIdx(s, reHandle, func(s string, m []int) (string, bool) {
 		prefix, name := group(s, m, 1), group(s, m, 2)
 		if v, ok := c.handles["@"+strings.ToLower(name)]; ok {
 			return prefix + v, true
 		}
+
 		if c.opt.Handles == "strip" {
 			return prefix, true
 		}
+
 		return prefix + "at " + nameWords(name), true
 	})
 }
@@ -338,11 +347,14 @@ func (c *Cleaner) stripLeftovers(s string) string {
 		if !strings.ContainsAny(inner, `\^_={}`) {
 			return "", false // currency like "$5 and $10", not math
 		}
+
 		if c.opt.Math == "placeholder" {
 			return "formula", true
 		}
+
 		return "", true
 	})
+
 	return reAttrInTTS.ReplaceAllString(s, "")
 }
 
@@ -369,6 +381,7 @@ func (c *Cleaner) clean(s string) string {
 	if c.opt.Terminate {
 		s = terminate(s)
 	}
+
 	return s
 }
 
@@ -378,13 +391,17 @@ func isAllCaps(s string) bool {
 		switch {
 		case unicode.IsLower(r):
 			return false
+
 		case unicode.IsUpper(r):
 			run++
 			maxRun = max(maxRun, run)
+
 		default:
 			run = 0
+
 		}
 	}
+
 	return maxRun >= 3
 }
 
@@ -399,24 +416,30 @@ func (c *Cleaner) literals(s string) string {
 		if re == nil {
 			return s
 		}
+
 		return replaceIdx(s, re, func(s string, m []int) (string, bool) {
 			key := s[m[0]:m[1]]
 			if alnumByte(key[0]) && m[0] > 0 && alnumByte(s[m[0]-1]) {
 				return "", false
 			}
+
 			if alnumByte(key[len(key)-1]) && m[1] < len(s) && alnumByte(s[m[1]]) {
 				return "", false
 			}
+
 			if fold {
 				key = strings.ToLower(key)
 			}
+
 			v, ok := table[key]
 			if !ok {
 				return "", false
 			}
+
 			return " " + v + " ", true
 		})
 	}
+
 	s = apply(s, c.reExact, c.litExact, false)
 	return apply(s, c.reFold, c.litFold, true)
 }
@@ -428,6 +451,7 @@ var commonWords = func() map[string]bool {
 	for _, w := range strings.Fields(`a am an and any are as at be but by can did do for from get go had has have he her him his how i if in is it its let me my no not now of off oh on one or our out say see she so than that the them then they this to too two up us use was we were what when who why will with yes yet you your all new old day way may note none once same such take tell time very here just like long make many much need only over also back more most must some into been`) {
 		m[w] = true
 	}
+
 	return m
 }()
 
@@ -441,6 +465,7 @@ func isUpperASCII(s string) bool {
 			return false
 		}
 	}
+
 	return s != ""
 }
 
@@ -452,12 +477,15 @@ func (c *Cleaner) wordsPass(s string, allCaps bool) string {
 		if m[1] < len(s) {
 			next = s[m[1]]
 		}
+
 		if a, ok := c.acr[tok]; ok {
 			if v, ok := c.resolve(a, tok); ok {
 				return v, true
 			}
+
 			return "", false
 		}
+
 		// Plural acronyms: "APIs" -> "A P I's".
 		if n := len(tok); n > 2 && tok[n-1] == 's' && isUpperASCII(tok[:n-1]) {
 			if a, ok := c.acr[tok[:n-1]]; ok {
@@ -469,24 +497,31 @@ func (c *Cleaner) wordsPass(s string, allCaps bool) string {
 				}
 			}
 		}
+
 		if v, ok := c.words[strings.ToLower(tok)]; ok {
 			return v, true
 		}
+
 		if !isUpperASCII(tok) || len(tok) < 2 {
 			return "", false
 		}
+
 		if allCaps {
 			return strings.ToLower(tok), true
 		}
+
 		if len(tok) > 6 || c.opt.Acronyms == "keep" || commonWords[strings.ToLower(tok)] {
 			return "", false
 		}
+
 		if next == '\'' && m[1]+1 < len(s) && unicode.IsLetter(rune(s[m[1]+1])) {
 			return "", false // contraction such as DON'T
 		}
+
 		if len(tok) >= 4 && hasVowel(tok) {
 			return "", false // word-like (NASA, NATO)
 		}
+
 		return spellLetters(tok), true
 	})
 }
