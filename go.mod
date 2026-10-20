@@ -16,6 +16,7 @@ require (
 	github.com/deckarep/golang-set v1.7.1 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
+	github.com/google/flatbuffers v25.12.19+incompatible // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mingrammer/commonregex v1.0.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect

@@ -1,0 +1,30 @@
+namespace Lexicon;
+
+table AcronymMap {
+  say: string;
+  spell: string;
+  expand: string;
+}
+
+table Acronym {
+  key: string;
+  value: AcronymMap;
+}
+
+table Word {
+  key:   string;
+  value: string;
+}
+
+table Handle {
+  key:   string;
+  value: string;
+}
+
+table Lexicon {
+  words: [Word];
+  handles: [Handle];
+  acronyms: [Acronym];
+}
+
+root_type Lexicon;

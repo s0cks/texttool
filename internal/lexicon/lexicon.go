@@ -1,45 +1,45 @@
-// Package lexicon holds pronunciation data for acronyms, words and handles:
-// a builtin set embedded in the binary plus any user-supplied files.
 package lexicon
 
 import (
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"maps"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/goccy/go-yaml"
+	"github.com/spf13/viper"
 )
 
-//go:embed builtin.yaml
-var builtinYAML []byte
+//go:embed builtin.bin
+var builtinLexicon []byte
 
-// Acronym describes how an acronym or abbreviation is read aloud.
 type Acronym struct {
 	Say    string `yaml:"say"`
 	Spell  string `yaml:"spell"`
 	Expand string `yaml:"expand"`
 }
 
-// UnmarshalYAML accepts either a mapping or a bare string (shorthand for say).
 func (a *Acronym) UnmarshalYAML(b []byte) error {
 	var s string
 	if err := yaml.Unmarshal(b, &s); err == nil {
 		*a = Acronym{Say: s}
 		return nil
 	}
+
 	type plain Acronym
 	var p plain
 	if err := yaml.Unmarshal(b, &p); err != nil {
 		return err
 	}
+
 	*a = Acronym(p)
 	return nil
 }
 
-// Lexicon is the merged pronunciation data.
 type Lexicon struct {
 	Acronyms map[string]Acronym `yaml:"acronyms"`
 	Words    map[string]string  `yaml:"words"`
@@ -50,93 +50,158 @@ func empty() *Lexicon {
 	return &Lexicon{Acronyms: map[string]Acronym{}, Words: map[string]string{}, Handles: map[string]string{}}
 }
 
-func parse(b []byte) (*Lexicon, error) {
+func WriteLexiconJsonCompact(lex *Lexicon) ([]byte, error) {
+	return json.Marshal(lex)
+}
+
+func WriteLexiconJson(lex *Lexicon) ([]byte, error) {
+	return json.MarshalIndent(lex, "", "  ")
+}
+
+func parseJson(b []byte) (*Lexicon, error) {
 	l := empty()
-	if err := yaml.Unmarshal(b, l); err != nil {
+	if err := json.Unmarshal(b, l); err != nil {
 		return nil, err
 	}
-	if l.Acronyms == nil {
-		l.Acronyms = map[string]Acronym{}
-	}
-	if l.Words == nil {
-		l.Words = map[string]string{}
-	}
-	if l.Handles == nil {
-		l.Handles = map[string]string{}
-	}
+
 	l.Normalize()
 	return l, nil
 }
 
-// Builtin returns the lexicon embedded in the binary.
-func Builtin() *Lexicon {
-	l, err := parse(builtinYAML)
-	if err != nil {
-		panic(fmt.Sprintf("lexicon: builtin.yaml is invalid: %v", err))
-	}
-	return l
+func WriteLexiconYaml(lex *Lexicon) ([]byte, error) {
+	return yaml.Marshal(lex)
 }
 
-// Empty returns a lexicon with no entries.
-func Empty() *Lexicon { return empty() }
+func parseYaml(b []byte) (*Lexicon, error) {
+	l := empty()
+	if err := yaml.Unmarshal(b, l); err != nil {
+		return nil, err
+	}
 
-// Load reads a user lexicon file.
-func Load(path string) (*Lexicon, error) {
+	l.Normalize()
+	return l, nil
+}
+
+func parse(path string) (*Lexicon, error) {
 	b, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	l, err := parse(b)
+
+	ext := filepath.Ext(path)
+	switch ext {
+	case "yaml":
+		return parseYaml(b)
+
+	case "yml":
+		return parseYaml(b)
+
+	case "json":
+		return parseJson(b)
+
+	case "bin":
+		return parseFbs(b)
+
+	default:
+		return nil, fmt.Errorf("invalid manifest path `%s`", path)
+	}
+}
+
+func Builtin() *Lexicon {
+	l, err := parseFbs(builtinLexicon)
+	if err != nil {
+		panic(fmt.Sprintf("lexicon: builtin.bin is invalid: %v", err))
+	}
+
+	return l
+}
+
+func Empty() *Lexicon {
+	return empty()
+}
+
+func Load(path string) (*Lexicon, error) {
+	l, err := parse(path)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", path, err)
 	}
+
 	return l, nil
 }
 
-// Merge copies o's entries over l's, so o wins on conflict.
+func LoadCli() (*Lexicon, error) {
+	lexFiles := viper.GetStringSlice("lexicon")
+	noBuiltin := viper.GetBool("no-builtin-lexicon")
+
+	lex := Empty()
+	if !noBuiltin {
+		lex = Builtin()
+	}
+
+	for _, f := range lexFiles {
+		u, err := Load(f)
+		if err != nil {
+			return nil, err
+		}
+
+		lex.Merge(u)
+	}
+
+	return lex, nil
+}
+
 func (l *Lexicon) Merge(o *Lexicon) {
 	maps.Copy(l.Acronyms, o.Acronyms)
 	for k, v := range o.Words {
 		l.Words[strings.ToLower(k)] = v
 	}
+
 	for k, v := range o.Handles {
 		l.Handles[strings.ToLower(k)] = v
 	}
 }
 
-// Normalize lower-cases the keys of Words and Handles.
 func (l *Lexicon) Normalize() {
 	w := make(map[string]string, len(l.Words))
 	for k, v := range l.Words {
 		w[strings.ToLower(k)] = v
 	}
+
 	l.Words = w
 	h := make(map[string]string, len(l.Handles))
 	for k, v := range l.Handles {
 		h[strings.ToLower(k)] = v
 	}
+
 	l.Handles = h
+
+	if l.Acronyms == nil {
+		l.Acronyms = map[string]Acronym{}
+	}
+
+	if l.Words == nil {
+		l.Words = map[string]string{}
+	}
+
+	if l.Handles == nil {
+		l.Handles = map[string]string{}
+	}
 }
 
-// Abbreviations lists dotted entries ("e.g.", "Dr.") so the sentence splitter
-// can avoid breaking after them.
 func (l *Lexicon) Abbreviations() []string {
 	var out []string
 	for k := range l.Acronyms {
-		if strings.HasSuffix(k, ".") {
-			out = append(out, strings.TrimSuffix(k, "."))
+		if before, ok := strings.CutSuffix(k, "."); ok {
+			out = append(out, before)
 		}
 	}
+
 	for k := range l.Words {
-		if strings.HasSuffix(k, ".") {
-			out = append(out, strings.TrimSuffix(k, "."))
+		if before, ok := strings.CutSuffix(k, "."); ok {
+			out = append(out, before)
 		}
 	}
+
 	sort.Strings(out)
 	return out
-}
-
-// Dump renders the merged lexicon as YAML.
-func (l *Lexicon) Dump() ([]byte, error) {
-	return yaml.Marshal(l)
 }

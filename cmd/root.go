@@ -30,12 +30,7 @@ type runOpts struct {
 	Counts bool
 	ChunkN int
 
-	Dump      bool
-	LexFiles  []string
-	NoBuiltin bool
-
 	Acronyms string
-	Handles  string
 	Inline   string
 	Blocks   string
 	Urls     string
@@ -62,6 +57,7 @@ its heading breadcrumb ("section") and its kind. Other steps are enabled by flag
 			Format: viper.GetString("format"),
 			Output: viper.GetString("output"),
 			Pretty: viper.GetBool("pretty"),
+
 			Pos:    viper.GetBool("pos"),
 			Ner:    viper.GetBool("ner"),
 			Stem:   viper.GetBool("stem"),
@@ -69,12 +65,7 @@ its heading breadcrumb ("section") and its kind. Other steps are enabled by flag
 			Counts: viper.GetBool("counts"),
 			ChunkN: viper.GetInt("chunk"),
 
-			Dump:      viper.GetBool("dump-lexicon"),
-			LexFiles:  viper.GetStringSlice("lexicon"),
-			NoBuiltin: viper.GetBool("no-builtin-lexicon"),
-
 			Acronyms: viper.GetString("acronyms"),
-			Handles:  viper.GetString("handles"),
 			Inline:   viper.GetString("inline-code"),
 			Blocks:   viper.GetString("code-blocks"),
 			Urls:     viper.GetString("urls"),
@@ -88,8 +79,6 @@ its heading breadcrumb ("section") and its kind. Other steps are enabled by flag
 		}{
 			{"format", opts.Format, []string{"md", "txt", "auto"}},
 			{"output", opts.Output, []string{"json", "ndjson"}},
-			{"acronyms", opts.Acronyms, []string{"spell", "expand", "keep"}},
-			{"handles", opts.Handles, []string{"say", "strip", "keep"}},
 			{"inline-code", opts.Inline, []string{"speak", "strip", "placeholder"}},
 			{"code-blocks", opts.Blocks, []string{"strip", "placeholder"}},
 			{"urls", opts.Urls, []string{"drop", "domain", "spell"}},
@@ -109,27 +98,8 @@ func run(opts *runOpts, args []string) error {
 		return fmt.Errorf("--chunk must be positive")
 	}
 
-	lex := lexicon.Empty()
-	if !opts.NoBuiltin {
-		lex = lexicon.Builtin()
-	}
-
-	for _, f := range opts.LexFiles {
-		u, err := lexicon.Load(f)
-		if err != nil {
-			return err
-		}
-
-		lex.Merge(u)
-	}
-
-	if opts.Dump {
-		b, err := lex.Dump()
-		if err != nil {
-			return err
-		}
-
-		_, err = os.Stdout.Write(b)
+	lex, err := lexicon.LoadCli()
+	if err != nil {
 		return err
 	}
 
@@ -148,7 +118,7 @@ func run(opts *runOpts, args []string) error {
 		TTSOptions: tts.Options{
 			Lexicon:    lex,
 			Acronyms:   opts.Acronyms,
-			Handles:    opts.Handles,
+			Handles:    string(internal.GetHandlesMode()),
 			InlineCode: opts.Inline,
 			CodeBlocks: opts.Blocks,
 			URLs:       opts.Urls,
@@ -204,16 +174,14 @@ func init() {
 	RootCommand.Flags().Bool("tts", false, "add a text-to-speech-cleaned `tts` field to every segment")
 	RootCommand.Flags().Bool("counts", false, "add an approximate token_count to every segment")
 	RootCommand.Flags().Int("chunk", 0, "group segments into chunks of at most N tokens (same section only)")
-	RootCommand.Flags().StringArray("lexicon", nil, "user lexicon YAML merged over the builtin one (repeatable; later files win)")
-	RootCommand.Flags().Bool("no-builtin-lexicon", false, "do not load the builtin lexicon")
+	lexicon.AddLexiconFlags(RootCommand)
 	internal.AddAcryonymFlags(RootCommand)
-	RootCommand.Flags().String("handles", "say", "@handles with --tts: say, strip or keep")
+	internal.AddHandlesFlags(RootCommand)
 	RootCommand.Flags().String("inline-code", "speak", "inline code with --tts: speak, strip or placeholder")
 	RootCommand.Flags().String("code-blocks", "strip", "code blocks with --tts: strip or placeholder")
 	RootCommand.Flags().String("urls", "drop", "URLs with --tts: drop, domain or spell")
 	RootCommand.Flags().String("math", "drop", "pandoc inline math with --tts: drop or placeholder")
 	RootCommand.Flags().StringSlice("skip", nil, "segment kinds to omit, e.g. code_block,table_cell")
-	RootCommand.Flags().Bool("dump-lexicon", false, "print the merged lexicon as YAML and exit")
 }
 
 func oneOf(name, val string, allowed ...string) error {
