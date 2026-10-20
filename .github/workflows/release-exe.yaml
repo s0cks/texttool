@@ -1,5 +1,5 @@
 ---
-name: Release texttool
+name: Release texttool executable
 on:
   release:
     types:
@@ -10,7 +10,6 @@ permissions:
   packages: write
 jobs:
   release-lsp:
-    if: "startsWith(github.event.release.tag_name, 'texttool')"
     strategy:
       matrix:
         include:
