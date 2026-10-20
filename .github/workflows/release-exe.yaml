@@ -23,16 +23,11 @@ jobs:
             arch: arm64
             target: macos-arm64
             ext: ""
-          - runner: macos-13
-            os: darwin
+          - runner: windows-latest
+            os: windows
             arch: amd64
-            target: macos-x64
-            ext: ""
-            # - runner: windows-latest
-            #   os: windows
-            #   arch: amd64
-            #   target: win-x64
-            #   ext: ".exe"
+            target: win-x64
+            ext: ".exe"
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout Code
